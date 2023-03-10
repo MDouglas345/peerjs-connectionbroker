@@ -1,0 +1,22 @@
+{
+  "name": "peerjs-connectionbroker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MDouglas345/peerjs-connectionbroker.git"
+  },
+  "author": "Michael Douglas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MDouglas345/peerjs-connectionbroker/issues"
+  },
+  "homepage": "https://github.com/MDouglas345/peerjs-connectionbroker#readme",
+  "dependencies": {
+    "peer": "^1.0.0"
+  }
+}
