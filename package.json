@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MDouglas345/peerjs-connectionbroker#readme",
   "dependencies": {
+    "http": "^0.0.1-security",
     "peer": "^1.0.0"
   }
 }
