@@ -9,6 +9,7 @@ const hosts = {};
 peerServer.on('connection', (client) =>{
     clients[client.id] = client;
     console.log(clients);
+    client.send("successful return");
 });
 
 
