@@ -1,6 +1,6 @@
 const { PeerServer } = require("peer");
 
-const peerServer = PeerServer({ port: 9000 });
+const peerServer = PeerServer({ port: 9000, path : "/broker" });
 
 const clients = {};
 const hosts = {};
