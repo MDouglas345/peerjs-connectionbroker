@@ -10,6 +10,11 @@ const clients = {};
 const hosts = {};
 
 
+app.get('/reset', (req,res) => {
+    hosts = {};
+});
+
+
 app.get('/', (req, res) => {
     /*
         if host is true, then a parameter name should be present
@@ -31,6 +36,8 @@ app.get('/', (req, res) => {
     if (req.query.name in hosts){
         res.send("REQUEST ERROR: Host name already taken");
     }
+
+    hosts[req.query.name] = req.query.id;
 
     
 
