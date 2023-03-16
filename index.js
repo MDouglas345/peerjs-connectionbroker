@@ -7,13 +7,51 @@ const app = express();
 app.use(cors());
 
 const clients = {};
+
+
+/*
+    <Name> : <ID>
+*/
+
+//will migrate to
+
+/*
+    <Name> : {<ID>, <NumOfPlayers>} 
+*/
 hosts = {};
 
 
 app.get('/reset', (req,res) => {
     hosts = {};
     res.send("resetted hosts");
+    console.log("resetted hosts");
 });
+
+
+
+function isCurrentlyHost(ID){
+    if (ID == null || ID == ""){
+        return false;
+    }
+
+    for (key in hosts){
+        if (hosts[key] == ID){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function deleteEntry(id) {
+   for (key in hosts){
+        if (hosts[key] == id){
+            delete hosts[key];
+            console.log("HOST DELETED : " + key);
+        }
+    }
+}
+
 
 
 app.get('/', (req, res) => {
@@ -25,12 +63,19 @@ app.get('/', (req, res) => {
 
     console.log("------------------------------------------------------");
 
-    console.log(req.query.host);
-
     if (req.query.host == "false" || req.query.host == null){
+        
+
+        if (isCurrentlyHost(req.query.id)){
+            // remove the host;
+            deleteEntry(req.query.id);
+
+        }
+
         console.log("HOST LIST");
         console.log(JSON.stringify(hosts));
         res.send(JSON.stringify(hosts));
+
         console.log("------------------------------------------------------");
         return;
     }
@@ -44,6 +89,8 @@ app.get('/', (req, res) => {
     }
 
     hosts[req.query.name] = req.query.id;
+
+    console.log("HOST CREATED : " + req.query.id);
 
     
 
