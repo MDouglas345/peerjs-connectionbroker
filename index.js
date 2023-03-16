@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
     console.log(req.query);
 
-    if (req.query.host != true){
+    if (req.query.host != true || req.query.host === null){
         console.log("HOST LIST");
         console.log(JSON.stringify(hosts));
         res.send(JSON.stringify(hosts));
