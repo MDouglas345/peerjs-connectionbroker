@@ -23,12 +23,15 @@ app.get('/', (req, res) => {
 
     //res.send(JSON.stringify(req.query));
 
-    console.log(req.query);
+    console.log("------------------------------------------------------");
 
-    if (req.query.host != true || req.query.host === null){
+    console.log(req.query.host);
+
+    if (req.query.host == "false" || req.query.host == null){
         console.log("HOST LIST");
         console.log(JSON.stringify(hosts));
         res.send(JSON.stringify(hosts));
+        console.log("------------------------------------------------------");
         return;
     }
 
@@ -44,7 +47,7 @@ app.get('/', (req, res) => {
 
     
 
-
+    console.log("------------------------------------------------------");
 
     
 })
