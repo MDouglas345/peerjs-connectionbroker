@@ -7,11 +7,12 @@ const app = express();
 app.use(cors());
 
 const clients = {};
-const hosts = {};
+hosts = {};
 
 
 app.get('/reset', (req,res) => {
     hosts = {};
+    res.send("resetted hosts");
 });
 
 
