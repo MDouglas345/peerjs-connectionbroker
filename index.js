@@ -1,134 +1,88 @@
 const express = require('express');
 const cors = require('cors');
+const { ExpressPeerServer } = require("peer");
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-
-app.use(cors());
-
-const clients = {};
-
-
-/*
-    <Name> : <ID>
-*/
-
-//will migrate to
-
-/*
-    <Name> : {<ID>, <NumOfPlayers>} 
-*/
-hosts = {};
-
-
-app.get('/reset', (req,res) => {
-    hosts = {};
-    res.send("resetted hosts");
-    console.log("resetted hosts");
-});
-
-
-
-function isCurrentlyHost(ID){
-    if (ID == null || ID == ""){
-        return false;
-    }
-
-    for (key in hosts){
-        if (hosts[key] == ID){
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function deleteEntry(id) {
-   for (key in hosts){
-        if (hosts[key] == id){
-            delete hosts[key];
-            console.log("HOST DELETED : " + key);
-        }
-    }
-}
-
-
-
-app.get('/', (req, res) => {
-    /*
-        if host is true, then a parameter name should be present
-    */
-
-    //res.send(JSON.stringify(req.query));
-
-    console.log("------------------------------------------------------");
-
-    if (req.query.host == "false" || req.query.host == null){
-        
-
-        if (isCurrentlyHost(req.query.id)){
-            // remove the host;
-            deleteEntry(req.query.id);
-
-        }
-
-        console.log("HOST LIST");
-        console.log(JSON.stringify(hosts));
-        res.send(JSON.stringify(hosts));
-
-        console.log("------------------------------------------------------");
-        return;
-    }
-
-    if (req.query.name === null){
-        res.send("REQUEST ERROR: No host name provided");
-    }
-
-    if (req.query.name in hosts){
-        res.send("REQUEST ERROR: Host name already taken");
-    }
-
-    hosts[req.query.name] = req.query.id;
-
-    console.log("HOST CREATED : " + req.query.id);
-
-    
-
-    console.log("------------------------------------------------------");
-
-    
-})
-
-
-app.listen(process.env.PORT || 3000, () => {
-  
-})
-
-
-/*
-const { PeerServer } = require("peer");
-
-const peerServer = PeerServer({
-     port: 9000, 
-     path : "/broker",
-    });
-
-const clients = {};
 const hosts = {};
-
-
-peerServer.on('connection', (client) =>{
-    clients[client.id] = client;
-    console.log(clients);
-    client.send("successful return");
-});
-
-
-peerServer.post('/host', (req, res) => {
-    
-});
-
-//console.log(peerServer);
-
-
+/*
+    Structure : 
+    <name> : {id, playercount, playerlimit}
 */
+
+app.use(cors({
+    origin : true
+}));
+
+
+app.get("/", (req, res, next) => res.send("Hello world!"));
+
+
+app.delete("/broker", (req,res,next) => {
+    /*
+        A client no longer wants to host!
+    */
+    console.log("------------------- New Delete Request -----------------------");
+
+    next();
+});
+
+
+app.put("/broker", (req, res, next) => {
+    /*
+        A host wants to update their name, playercount, or playerlimit!
+    */
+    console.log("------------------- New Delete Request -----------------------");
+    next();
+})
+
+app.post("/broker", (req, res, next) => {
+    /*
+        A client wants to host!
+    */
+    console.log("------------------- New Post Request -----------------------");
+    //console.log(req.body);
+    hosts[req.body.name] = {id : req.body.id, playercount : req.body.playercount, playerlimit : req.body.playerlimit};
+    console.log(hosts);
+    res.status(200).send();
+    next();
+
+    
+
+});
+
+app.get("/broker", (req, res, next) => {
+    /*
+        Just return the current host list!
+    */
+       console.log("------------------- New Get Request -----------------------");
+
+       res.json(hosts);
+
+       console.log("Sent current host list!");
+
+       //console.log(req.query);
+       next();
+
+
+});
+
+const server = app.listen(9000);
+
+const peerServer = ExpressPeerServer(server, {
+	path: "/myapp",
+});
+
+app.use("/peerjs", peerServer);
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
+
+
+
